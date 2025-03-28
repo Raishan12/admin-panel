@@ -47,7 +47,19 @@ const server = http.createServer((req,res)=>{
                     res.end(data)
                 }
             })
-        }     
+        }
+        if(req.url==="/dashboard.html"){ 
+            fs.readFile(filedashboardHtml,(err,data)=>{
+                if(err){
+                    res.writeHead(500)
+                    res.end(err.message)
+                }else{
+                    res.writeHead(200,{"Content-Type":"text/html"})
+                    res.end(data)
+                }
+            })
+        }
+            
     }
     
     if(req.method==="POST"){
@@ -89,7 +101,7 @@ const server = http.createServer((req,res)=>{
                 body += chunk.toString()
             })
             req.on("end",()=>{
-                const parsedData = querysting.parse(body)
+                const parsedData = querystring.parse(body)
                 fs.readFile("./user.json",(err,data)=>{
                     if(err){
                         res.writeHead(500)
@@ -98,7 +110,7 @@ const server = http.createServer((req,res)=>{
                         const val = JSON.parse(data)
                         val.forEach(e=>{
                             if(e.username===parsedData.username && e.password===parsedData.password){
-                                res.writeHead(200,{"Content-Type":"text/html"})
+                                res.writeHead(200,{"Content-Type":"text/html","location":filedashboardHtml})
                                 res.end(filedashboardHtml)
                             }
                         })
